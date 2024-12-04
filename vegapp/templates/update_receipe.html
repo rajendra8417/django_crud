@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Recipe</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 30px;
+        }
+
+        /* Container Styles */
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .form-group img {
+            max-width: 100px;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        /* Button Styles */
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .back-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+       <!-- Navbar -->
+       <div class="navbar">
+        <a href="#">MySite</a>
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout_page' %}" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">Logout</button>
+        </form>        
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <h1>Update Recipe</h1>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="reciepe_name">Recipe Name</label>
+                <input type="text" id="reciepe_name" name="reciepe_name" value="{{ recipe.reciepe_name }}">
+            </div>
+            <div class="form-group">
+                <label for="reciepe_description">Description</label>
+                <textarea id="reciepe_description" name="reciepe_description">{{ recipe.reciepe_description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="reciepe_images">Image</label>
+                <input type="file" id="reciepe_images" name="reciepe_images">
+                {% if recipe.reciepe_image %}
+                    <p>Current Image: <img src="{{ recipe.reciepe_image.url }}" alt="Recipe Image"></p>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn">Update Recipe</button>
+        </form>
+
+        <div class="back-link">
+            <a href="/receipes/">Back to Recipes</a>
+        </div>
+    </div>
+
+</body>
+</html>

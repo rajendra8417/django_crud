@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 30px;
+        }
+
+        /* Container Styles */
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Table Styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+        }
+
+        .table td img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .actions a {
+            margin-right: 10px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        /* Search bar */
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #45a049;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <a href="#">MySite</a>
+      {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout_page' %}" style="margin: 0;">
+          {% csrf_token %}
+          <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">Logout</button>
+      </form>        
+      {% endif %}
+  </div>
+
+    <div class="container">
+        <h1>Recipe Management</h1>
+
+        <!-- User Information -->
+        <p><strong>User:</strong> {{request.user}}</p>
+
+        <!-- Add Recipe Form -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="reciepe_name">Recipe Name</label>
+                <input name="reciepe_name" type="text" class="form-control" id="reciepe_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="reciepe_description">Description</label>
+                <textarea name="reciepe_description" id="reciepe_description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="reciepe_images">Image</label>
+                <input name="reciepe_images" type="file" id="reciepe_images" required>
+            </div>
+
+            <button type="submit" class="btn">Add Recipe</button>
+        </form>
+
+        <!-- Recipes Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sr No.</th>
+                    <th>Recipe Name</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in recipes %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ r.reciepe_name }}</td>
+                        <td>{{ r.reciepe_description }}</td>
+                        <td><img src="/media/{{ r.reciepe_image }}" alt="{{ r.reciepe_name }}"></td>
+                        <td class="actions">
+                            <a href="/delete_receipe/{{ r.id }}">Delete</a>
+                            <a href="/update_receipe/{{ r.id }}">Update</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Search Form moved to bottom -->
+        <div class="search-bar">
+            <form method="get">
+                <input name="search" type="text" placeholder="Search for a recipe..." required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
